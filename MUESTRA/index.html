@@ -1,0 +1,1046 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Level UP Gamer</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Bootstrap Duplicado por compatibilidad -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+    <!-- Estilos personalizados -->
+    <style>
+      :root {
+        --azul-electrico: #1E90FF;
+        --verde-neon: #39FF14;
+      }
+      body {
+        font-family: 'Roboto', sans-serif;
+        background: #000000;
+        color: #FFFFFF;
+      }
+      h1, h2, h3, .navbar-brand {
+        font-family: 'Orbitron', sans-serif;
+        color: var(--azul-electrico)!important;
+      }
+      .btn-primary {
+        background: var(--azul-electrico);
+        border: none;
+        padding: 12px 25px;
+        font-family: 'Orbitron', sans-serif;
+      }
+      .btn-primary:hover {
+        background: var(--verde-neon);
+        color: #000!important;
+      }
+      .btn-neon {
+        background: var(--verde-neon);
+        color: #000;
+        border: none;
+        font-family: 'Orbitron', sans-serif;
+        box-shadow: 0 0 10px var(--verde-neon), 0 0 20px var(--azul-electrico);
+      }
+      .btn-neon:hover {
+        background: var(--azul-electrico);
+        color: #fff!important;
+      }
+      .card {
+        background: #1a1a1a;
+        border: 1px solid var(--azul-electrico);
+        margin-bottom: 20px;
+      }
+      .card-title { color: var(--verde-neon); }
+      .texto-secundario { color: #D3D3D3; }
+
+      /* Contacto Neon */
+      .neon-section {
+        background: #101820;
+        border-radius: 15px;
+        box-shadow: 0 0 30px var(--azul-electrico);
+        margin-bottom: 40px;
+      }
+      .neon-title {
+        color: var(--verde-neon);
+        text-shadow: 0 0 8px var(--verde-neon), 0 0 12px var(--azul-electrico);
+        font-family: 'Orbitron', sans-serif;
+      }
+      .neon-form .form-group {
+        margin-bottom: 18px;
+      }
+      .neon-form .form-control {
+        background: #181818;
+        color: #fff;
+        border: 1px solid var(--azul-electrico);
+        border-radius: 8px;
+      }
+      .neon-form .form-control:focus {
+        box-shadow: 0 0 8px var(--azul-electrico);
+        border-color: var(--verde-neon);
+      }
+      .contacto-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+      }
+      .form-container {
+        width: 100%;
+        max-width: 420px;
+        margin: auto;
+      }
+
+      /* WhatsApp Floating Button */
+      .whatsapp-floating {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+      }
+      .whatsapp-floating a {
+        background: #25D366;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 25px rgba(37, 211, 102, 0.5);
+        transition: all 0.3s;
+      }
+      .whatsapp-floating i {
+        color: white;
+        font-size: 2rem;
+      }
+      .whatsapp-floating:hover {
+        transform: scale(1.1);
+      }
+      .tooltip {
+        visibility: hidden;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        position: absolute;
+        right: 70px;
+        white-space: nowrap;
+      }
+      .whatsapp-floating:hover .tooltip {
+        visibility: visible;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top neon-border">
+      <img src="assets/image/logoNew.png" alt="Logo" width="50" class="me-3 glow-logo">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <span class="logo-text">LEVEL UP</span>
+          <span class="logo_sub">GAMER</span> 🎮
+          
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav me-auto">
+             <a class="nav-link active" aria-current="page" href="#">Catálogo</a>
+            <a class="nav-link" href="#promociones">Promociones</a>
+            <a class="nav-link" href="#contacto">Contacto</a>
+            <a class="nav-link" href="#eventos">Blog</a>
+            <a class="nav-link" href="#blog">Eventos</a>
+          </div>
+        </div>
+
+         <!--- Botones alineados a la derecha -->
+          <div class="d-flex align-items-center">
+            <button class="btn btn-primary position-relative me-2" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#carritoModal">
+              <i class="fas fa-shopping-cart"></i>
+              <span id="contadorCarrito" 
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                0
+              </span>
+            </button>       
+
+             <button class="btn btn-outline-primary ms-2" 
+                 data-bs-toggle="modal" 
+                  data-bs-target="#loginModal">
+             <i class="fas fa-user-lock me-2"></i>Iniciar Sesión
+              </button>
+
+
+            <button class="btn btn-outline-primary ms-2" 
+                data-bs-toggle="modal" 
+                data-bs-target="#registroModal">
+             <i class="fas fa-user-plus me-2"></i>Registro
+           </button>
+           <button class="btn btn-outline-success ms-2" 
+                data-bs-toggle="modal" 
+                data-bs-target="#perfilModal">
+             <i class="fas fa-user-circle me-2"></i>Mi Perfil
+           </button>
+        </div>
+      </div>
+    </nav>
+      
+  
+  
+
+    <!--  Inicio -->
+    <header id="inicio" class="bg-dark text-white text-center py-5 mt-5">
+      <h1>Bienvenido a Level UP Gamer 🎮</h1>
+      <p class="lead">Tu tienda de videojuegos y accesorios</p>
+      <a href="#catalogo" class="btn btn-primary btn-lg">Explorar Catálogo</a>
+    </header>
+
+     <!-- Origen e Impacto Mejorados -->
+<section class="container py-5">
+  <div class="row">
+    <!-- Origen -->
+    <div class="col-md-6">
+      <h2 class="mb-4">🏭 Origen de Productos</h2>
+      <div class="card h-100 shadow-lg border-custom">
+        <div class="card-body">
+          <h5 class="card-title">Certificaciones</h5>
+          <p class="texto-secundario">Distribuidores oficiales de:</p>
+          <ul class="texto-secundario">
+            <li><i class="fas fa-check-circle"></i> Sony Interactive Entertainment</li>
+            <li><i class="fas fa-check-circle"></i> Microsoft Xbox</li>
+            <li><i class="fas fa-check-circle"></i> Nintendo Co., Ltd.</li>
+            <li><i class="fas fa-check-circle"></i> SteelSeries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Impacto Comunitario -->
+    <div class="col-md-6 bg-dark text-white">
+      <h2 class="mb-4 text-center">🤝 Impacto Comunitario</h2>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card h-100 shadow-lg border-custom">
+            <div class="card-body text-center">
+              <h3 class="text-success">+1,200</h3>
+              <p class="texto-secundario">Eventos locales apoyados</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card h-100 shadow-lg border-custom">
+            <div class="card-body text-center">
+              <h3 class="text-success">$2.5M</h3>
+              <p class="texto-secundario">Invertidos en la comunidad</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Oferta del Mes -->
+<section class="container py-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card shadow-lg border-custom h-100">
+        <div class="card-body d-flex flex-column">
+          <div class="row align-items-center flex-grow-1">
+            <div class="col-md-6">
+              <img src="assets/image/Teclado_Inspire_Smart_TI707.jpg" class="img-fluid" alt="Teclado Inalámbrico">
+            </div>
+            <div class="col-md-6 text-white">
+              <h3 class="card-title">Oferta del Mes: Teclado Inalámbrico</h3>
+              <p class="card-text">El Teclado Multidispositivo Inalámbrico Inspire Smart TI707 es la solución perfecta para quienes buscan versatilidad y
+                 comodidad. Equipado con tecnología de 2.4 MHz y dos modos Bluetooth, este teclado se adapta fácilmente a tu Smart TV y otros dispositivos,
+                  ofreciendo una experiencia de uso sin interrupciones. Su diseño elegante en negro incluye un touchpad integrado y botones izquierdo-derecho,
+                   junto con controles multimedia, brindando un control total en la palma de tu mano. Con baterías AAA incluidas, 
+                   el TI707 está listo para ofrecerte rendimiento de élite en cualquier entorno.</p>
+              <p class="card-text" style="color: #00F7FF;">$85.990</p>
+              <a href="#" class="btn btn-primary btn-comprar" data-id="oferta-teclado" data-nombre="Teclado Inalámbrico" data-precio="49990">Agregar al Carrito</a>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-3">
+              <img src="assets/image/teclado1.webp" class="img-fluid" alt="Teclado Inalámbrico 1">
+            </div>
+            <div class="col-md-3">
+              <img src="assets/image/teclado2.webp" class="img-fluid" alt="Teclado Inalámbrico 2">
+            </div>
+              <div class="col-md-3">
+              <img src="assets/image/teclado4.webp" class="img-fluid" alt="Teclado Inalámbrico 3">
+            </div>
+            <div class="col-md-3">
+              <img src="assets/image/teclado3.webp" class="img-fluid" alt="Teclado Inalámbrico 3">
+            </div>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+           
+   
+     <!-- Sección Catálogo -->
+    <section id="catalogo" class="py-4">
+      <div class="container">
+          <h2>Catálogo de la tienda</h2>
+          <div class="row mb-4">
+      <div class="col-12 col-md-6 mx-auto">
+        <input 
+          type="text" 
+          id="buscadorCatalogo" 
+          class="form-control" 
+          placeholder="Buscar productos..."
+        >
+      </div>
+    </div>
+        
+        <div class="row g-4">
+          <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card  h-100 w-100">
+               <div class="ratio ratio-4x3">
+              <img src="assets/image/catan.webp" class="card-img-top" alt="Catan"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Catan 🎲</h5>
+            
+                 <p class="card-text" style="color:#D3D3D3">Descripción:
+                      Clásico juego de estrategia donde los jugadores compiten por colonizar y 
+                      expandirse en la isla de Catan. 
+                      Ideal para 3-4 jugadores y perfecto para noches de juego en 
+                      familia o con amigos. </p>
+
+               
+                
+
+                <p class="card-text" style="color: #00F7FF;">$29.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto1" 
+                             data-nombre="Catan" 
+                             data-precio="29990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+     
+          
+
+        
+            <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card  h-100 w-100">
+               <div class="ratio ratio-4x3">
+              <img src="assets/image/carcassonne.webp" class="card-img-top" alt="Carcassonne"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Carcassonne 🎲</h5>
+                 <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Un juego de colocación de fichas donde los jugadores construyen el paisaje 
+                  alrededor de la fortaleza medieval de Carcassonne. Ideal para 2-5 jugadores y fácil de 
+                  aprender. </p>
+                <p class="card-text" style="color: #00F7FF;">$24.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto1" 
+                             data-nombre="Carcassonne" 
+                             data-precio="24990">Comprar</a>
+              </div>
+            </div>
+          </div>
+           <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card  h-100 w-100">
+               <div class="ratio ratio-4x3">
+              <img src="assets/image/Controlador Inalámbrico Xbox Series X.webp" class="card-img-top" alt="Control Xbox Series X"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Control Xbox Series X 🎮</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Ofrece una experiencia de juego cómoda con 
+                   botones mapeables y una respuesta táctil mejorada. Compatible con consolas Xbox y PC. </p>
+                <p class="card-text" style="color: #00F7FF;">$59.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar " data-id="producto2" 
+                             data-nombre="Control Xbox Series X" 
+                             data-precio="59990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+           <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card  h-100 w-100">
+                <div class="ratio ratio-4x3">
+              <img src="assets/image/D_NQ_NP_2X_883946-MLA79964406701_102024-F.webp" class="card-img-top" alt="Play Station 5"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Play Satation 5 🕹️</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  La consola de última generación de Sony, que ofrece gráficos 
+                  impresionantes y tiempos de carga ultrarrápidos para una experiencia de juego inmersiva.</p>
+                <p class="card-text" style="color: #00F7FF;">$549.990</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto3" 
+                             data-nombre="Play Station 5" 
+                             data-precio="549990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card  h-100 w-100">
+               <div class="ratio ratio-4x3">
+              <img src="assets/image/Auriculares-gamer_HyperX Cloud II.jpg" class="card-img-top" alt="Auriculares HyperX Cloud II"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Auriculares Gamer HyperX Cloud II 🎧</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Proporcionan un sonido envolvente de calidad con un 
+                  micrófono desmontable y almohadillas de espuma viscoelástica para mayor comodidad 
+                  durante largas sesiones de juego. </p>
+                <p class="card-text" style="color: #00F7FF;">$79.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto4" 
+                             data-nombre="Auriculares HyperX Cloud II" 
+                             data-precio="79990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card h-100 w-100">
+               <div class="ratio ratio-4x3">
+              <img src="assets/image/Asus Rog Strix Scar 15 Gaming Laptop-15.6.jpg" class="card-img-top" alt="Asus Rog Strix Scar 15"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Asus Rog Strix Scar 15 Gaming Laptop 💻</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Potente laptop para juegos con procesador Intel i7, 
+                  tarjeta gráfica NVIDIA RTX 3060 y pantalla de 15.6" Full HD a 300Hz para una experiencia 
+                  de juego fluida y de alta calidad. </p>
+                <p class="card-text" style="color: #00F7FF;">$1.299.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto5" 
+                             data-nombre="Asus Rog Strix Scar 15" 
+                             data-precio="1299990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card h-100 w-100">
+              <div class="ratio ratio-4x3">
+              <img src="assets/image/Secretlab Titan Evo Frost -Silla Gamer.jpg" class="card-img-top" alt="Secretlab Titan Evo Frost"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Secretlab Titan Evo Frost 💺 </h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Silla gamer Diseñada para el máximo confort, esta silla ofrece un soporte 
+                  ergonómico y personalización ajustable para sesiones de juego prolongadas, con soporte lumbar ajustable, 
+                  reposabrazos 4D y espuma de alta densidad para una comodidad superior durante largas 
+                  sesiones de juego.</p>
+
+                <p class="card-text" style="color: #00F7FF;">$349.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto6" 
+                             data-nombre="Secretlab Titan Evo Frost" 
+                             data-precio="349990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card h-100 w-100">
+              <div class="ratio ratio-4x3">
+              <img src="assets/image/Mouse Gamer Logitech G502 HERO.webp" class="card-img-top" alt="Mouse Logitech G502 HERO"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Mouse Gamer Logitech G502 HERO 🖱️</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Mouse gamer de alta precisión con sensor HERO 25K, 
+                  11 botones programables y retroiluminación RGB personalizable para una experiencia de juego 
+                  optimizada, este mouse es ideal para gamers que buscan un control preciso y 
+                  personalización.. </p>
+                <p class="card-text" style="color: #00F7FF;">$49.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto7" 
+                             data-nombre="Mouse Logitech G502 HERO" 
+                             data-precio="49990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card h-100 w-100">
+              <div class="ratio ratio-4x3">
+              <img src="assets/image/Mousepad Razer Goliathus Extended Chroma.webp" class="card-img-top" alt="Mousepad Razer Goliathus Extended Chroma"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Mousepad Razer Goliathus Extended Chroma 👾</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Mousepad extendido con iluminación RGB personalizable, 
+                  superficie optimizada para sensores ópticos y láser, y base antideslizante para un 
+                  rendimiento superior en juegos, asegurando una superficie suave y uniforme para el 
+                  movimiento del mouse.. </p>
+                <p class="card-text" style="color: #00F7FF;">$29.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="producto8" 
+                             data-nombre="Mousepad Razer Goliathus Extended Chroma" 
+                             data-precio="29990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card h-100 w-100">
+              <div class="ratio ratio-4x3">
+              <img src="assets/image/PoleraLevelUP.jpg" class="card-img-top" alt="Polera Level UP Gamer"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Polera Level UP Gamer 👕</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Polera de algodón 100% con diseño exclusivo de Level UP Gamer, 
+                  cómoda y duradera, perfecta para mostrar tu pasión por los videojuegos en cualquier ocasión. </p>
+
+                <p class="card-text" style="color: #00F7FF;">$19.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" 
+                             data-id="producto9" 
+                             data-nombre="Polera Level UP Gamer" 
+                             data-precio="19990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+           <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card h-100 w-100">
+              <div class="ratio ratio-4x3">
+              <img src="assets/image/Refrigeración Liquida Cougar Poseidon Elite ARGB 240-Black1.webp" class="card-img-top" alt="Refrigeración Líquida Cougar Poseidon Elite ARGB 240"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Refrigeración Liquida Cougar Poseidon Elite ARGB 240-Black ❄️</h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Sistema de refrigeración líquida para CPU con radiador de 240mm,
+                   iluminación ARGB personalizable y bomba de alta eficiencia para mantener tu
+                    procesador a temperaturas óptimas durante sesiones de juego intensas.
+                  </p>
+
+                <p class="card-text" style="color: #00F7FF;">$70.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="productoARG" 
+                             data-nombre="Refrigeración Líquida Cougar Poseidon Elite ARGB 240" 
+                             data-precio="70990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+               <div class="col-md-4 d-flex align-items-stretch mb-4">
+            <div class="card h-100 w-100">
+              <div class="ratio ratio-4x3">
+              <img src="assets/image/Monitor Gamer Xiaomi G34″, WQi, 180Hz.webp" class="card-img-top" alt=" Monitor Gamer Xiaomi G34″, WQi, 180Hz"></div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Monitor Gamer Xiaomi G34,  WQi, 180Hz 🖥️ </h5>
+                <p class="card-text" style="color:#D3D3D3">Descripción:
+                  Monitor ultrawide de 34" con resolución WQHD, tasa de refresco de 180Hz y
+                   tiempo de respuesta de 3ms, ideal para una experiencia de juego inmersiva y
+                    fluida, con soporte para AMD FreeSync y múltiples modos de visualización.
+                 
+                  </p>
+
+                <p class="card-text" style="color: #00F7FF;">$295.990.</p>
+                <a href="#" class="btn btn-primary btn-comprar" data-id="productoMonitor" 
+                             data-nombre="Monitor Gamer Xiaomi G34,  WQi, 180Hz" 
+                             data-precio="295990">Comprar</a>
+              </div>
+            </div>
+          </div>
+
+
+          
+      
+        </div>
+      </div>
+    </section>
+         
+      
+
+
+    <!-- Blog -->
+<section id="blog" class="py-5 game-section">
+  <div class="container">
+    <h2 class="section-title">📰 ÚLTIMAS NOTICIAS GAMER</h2>
+    <div class="row g-4">
+      <!-- Tarjeta de Setup Gamer -->
+      <div class="col-md-4">
+        <div class="blog-card">
+          <div class="card-header">
+            <span class="badge bg-neon">Novedades</span>
+            <img src="assets/image/setup.avif" alt="Setup Gamer" class="img-fluid rounded-top">
+          </div>
+          <div class="card-body">
+            <h3>Guía Definitiva para tu Setup</h3>
+            <p>Aprende a optimizar tu espacio de juego...</p>
+            <div class="card-footer">
+              <a href="https://www.hp.com/cl-es/shop/tech-takes/guia-setup-gaming-profesional" class="btn btn-neon" target="_blank">Leer más <i class="fas fa-arrow-right"></i></a>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Tráiler de GTA 6 -->
+      <div class="col-md-4">
+        <div class="blog-card shadow-sm">
+          <div class="card-header position-relative">
+            <span class="badge bg-neon"></span>
+            <img src="assets/image/gta-6.webp" alt="Tráiler de GTA 6" class="img-fluid rounded-top trailer-img" width="200" height="auto">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">¡Mira el Tráiler de GTA 6!</h3>
+            <p class="card-text">No te pierdas el emocionante tráiler de GTA 6. Prepárate para la próxima aventura en el mundo de Rockstar.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              
+            </div>
+          </div>
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <a href="https://www.rockstargames.com/VI" class="btn btn-neon" target="_blank">Ver Tráiler <i class="fas fa-arrow-right"></i></a>
+           
+             
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Puedes añadir más tarjetas aquí -->
+    </div>
+  </div>
+</section>
+
+
+
+    <!-- Promociones -->
+    <section id="promociones" class="bg-light py-5">
+      <div class="container">
+        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="assets/image/elden-ring.webp" class="d-block w-100" alt="Elden Ring">
+            </div>
+            <div class="carousel-item">
+              <img src="assets/image/ea-sports-fc-26.webp" class="d-block w-100" alt="EA Sports FC 26">
+            </div>
+            <div class="carousel-item">
+              <img src="assets/image/SI_WiiU_TheLegendOfZeldaBreathOfTheWild_.jpg" class="d-block w-100" alt="the Legend of Zelda Breath of the Wild">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+  <!-- Contacto simple -->
+     
+    <section id="contacto" class="py-4">
+      <div class="container text-center">
+        <h2>📩 Contacto</h2>
+        <p>Deja tu mensaje y te responderemos pronto</p>
+        <form>
+          <div class="mb-3">
+            <label for="nombre" class="form-label"> 🚀 Tu Nombre </label>
+            <input type="text" class="form-control" id="nombre" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label"> 📧 Email </label>
+            <input type="email" class="form-control" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="mensaje" class="form-label"> 💡 Escribe tu Mensaje...</label>
+            <textarea class="form-control" id="mensaje" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Sección Eventos -->
+    <section id="eventos" class="py-5 neon-section">
+      <div class="container">
+        <h2 class="section-title">🗺️ EVENTOS GAMER</h2>
+        <div class="map-container">
+          <div id="map" style="height: 500px; border: 3px solid var(--azul-electrico); border-radius: 15px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+      <p>Level UP Game todos los derechos reservados 2025</p>
+    </footer>
+
+    <!-- Modal Carrito -->
+    <div class="modal fade" id="carritoModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">🛒 Carrito de Compras</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="carritoItems" class="mb-3"></div>
+            <h5>Total: $<span id="totalCarrito">0</span></h5>
+            <p id="totalDescuento" style="color:var(--verde-neon)"></p>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+            <button type="button" class="btn btn-danger" id="vaciarCarritoBtn" data-bs-toggle="tooltip" title="eliminar todos los productos">
+              <i class="fas fa-trash-alt me-2"></i>Vaciar Carrito
+            </button>
+            <button type="button" class="btn btn-success" id="finalizarCompraBtn" data-bs-dismiss="modal">Finalizar Compra</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+           <!-- Modal Registro -->
+<div class="modal fade" id="registroModal" aria-labelledby="registroModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="registroModalLabel">🎮 Registro Gamer</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="registroForm">
+          <div class="mb-3">
+            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control bg-transparent text-white" id="fechaNacimiento" required>
+          </div>
+          <div class="mb-3">
+            <label for="emailRegistro" class="form-label">Correo (@duoc.cl para descuento)</label>
+            <input type="email" class="form-control bg-transparent text-white" id="emailRegistro" required aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text text-white">Asegúrate de usar tu correo institucional para obtener el descuento.</div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña (mínimo 8 caracteres)</label>
+            <input type="password" class="form-control bg-transparent text-white" id="password" minlength="8" required>
+            <div class="form-text text-white">Tu contraseña debe tener al menos 8 caracteres.</div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+            <input type="password" class="form-control bg-transparent text-white" id="confirmPassword" minlength="8" required>
+            <div class="form-text text-white">Por favor, confirma tu contraseña.</div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    <!-- Modal Registro -->
+<div class="modal fade" id="registroModal" aria-labelledby="registroModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="registroModalLabel">🎮 Registro Gamer</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="registroForm">
+          <div class="mb-3">
+            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control bg-transparent text-white" id="fechaNacimiento" required>
+          </div>
+          <div class="mb-3">
+            <label for="emailRegistro" class="form-label">Correo (@duoc.cl para descuento)</label>
+            <input type="email" class="form-control bg-transparent text-white" id="emailRegistro" required aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text text-white">Asegúrate de usar tu correo institucional para obtener el descuento.</div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña (mínimo 8 caracteres)</label>
+            <input type="password" class="form-control bg-transparent text-white" id="password" minlength="8" required>
+            <div class="form-text text-white">Tu contraseña debe tener al menos 8 caracteres.</div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+            <input type="password" class="form-control bg-transparent text-white" id="confirmPassword" minlength="8" required>
+            <div class="form-text text-white">Por favor, confirma tu contraseña.</div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Inicio de Sesión Mejorado -->
+<div class="modal fade" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white rounded-4 border border-secondary">
+      <div class="modal-header border-secondary">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-user-lock fs-4 text-primary"></i>
+          <h2 class="modal-title fs-5" id="loginModalLabel">Acceso Seguro</h2>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="loginForm" novalidate>
+          <!-- Campo Email -->
+          <div class="mb-4">
+            <label for="loginEmail" class="form-label small text-muted">Correo Institucional</label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary">
+                <i class="fas fa-envelope text-muted"></i>
+              </span>
+              <input type="email" 
+                     class="form-control bg-dark text-white border-secondary" 
+                     id="loginEmail" 
+                     pattern="[a-z0-9._%+-]+@duoc\.cl$"
+                     required
+                     aria-describedby="emailHelp">
+            </div>
+            <div class="invalid-feedback">Debe usar su correo @duoc.cl</div>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="mb-4">
+            <div class="d-flex justify-content-between">
+              <label for="loginPassword" class="form-label small text-muted">Contraseña</label>
+              <a href="#!" class="text-decoration-none small" data-bs-toggle="modal" data-bs-target="#recoveryModal">
+                ¿Olvidó su contraseña?
+              </a>
+            </div>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary">
+                <i class="fas fa-lock text-muted"></i>
+              </span>
+              <input type="password" 
+                     class="form-control bg-dark text-white border-secondary" 
+                     id="loginPassword" 
+                     minlength="8"
+                     required>
+              <button class="btn btn-outline-secondary toggle-password" type="button">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="invalid-feedback">Mínimo 8 caracteres</div>
+          </div>
+
+          <!-- Botón de Acción -->
+          <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+            <span class="submit-text">Ingresar</span>
+            <div class="spinner-border spinner-border-sm d-none" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </button>
+        </form> <!-- Cierre del formulario -->
+
+        <!-- Pie de Modal -->
+        <div class="modal-footer justify-content-center border-top-0">
+          <p class="small mb-0">
+            ¿Primera vez aquí? 
+            <a href="#" class="text-decoration-none fw-bold" 
+               data-bs-toggle="modal" data-bs-target="#registroModal">
+              Crea tu cuenta
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Recuperación de Contraseña -->
+<div class="modal fade" id="recoveryModal" aria-labelledby="recoveryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white rounded-4 border border-secondary">
+      <div class="modal-header border-secondary">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-key fs-4 text-primary"></i>
+          <h2 class="modal-title fs-5" id="recoveryModalLabel">Recuperar Contraseña</h2>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="recoveryForm" novalidate>
+          <div class="mb-4">
+            <label for="recoveryEmail" class="form-label small text-muted">Correo Institucional</label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary">
+                <i class="fas fa-envelope text-muted"></i>
+              </span>
+              <input type="email" 
+                     class="form-control bg-dark text-white border-secondary" 
+                     id="recoveryEmail" 
+                     pattern="[a-z0-9._%+-]+@duoc\.cl$"
+                     required
+                     aria-describedby="emailHelp">
+            </div>
+            <div class="invalid-feedback">Debe usar su correo @duoc.cl</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+            <span class="submit-text">Enviar Instrucciones</span>
+            <div class="spinner-border spinner-border-sm d-none" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+ 
+
+
+
+
+<!-- Modal Perfil -->
+<div class="modal fade" id="perfilModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">👤 Gestión de Perfil</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-pills mb-4" id="profileTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#datosPersonales" type="button">Datos Personales</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#preferenciasCompra" type="button">Preferencias</button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+           Pestaña Datos Personales 
+          <div class="tab-pane fade show active" id="datosPersonales">
+            <form id="perfilForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Nombre Completo</label>
+                  <input type="text" class="form-control" id="perfilNombre" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Teléfono</label>
+                  <input type="tel" class="form-control" id="perfilTelefono" pattern="[0-9]{9}">
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Correo Electrónico</label>
+                  <input type="email" class="form-control" id="perfilCorreo" disabled>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Fecha de Nacimiento</label>
+                  <input type="date" class="form-control" 
+                       id="perfilFechaNacimiento" 
+                       max="2007-09-10"> <!-- Fecha corregida -->
+
+                  <input type="date" class="form-control" id="perfilFechaNacimiento" max="2007-09-06">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">País</label>
+                  <select class="form-select" id="perfilPais">
+                    <option value="CL">Chile</option>
+                    <option value="AR">Argentina</option>
+                    <option value="PE">Perú</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success mt-4 w-100">Guardar Cambios</button>
+            </form>
+          </div>
+
+          Pestaña Preferencias de Compra 
+          <div class="tab-pane fade" id="preferenciasCompra">
+            <form id="preferenciasForm">
+              <div class="mb-4">
+                <label class="form-label">Método de Pago Predeterminado</label>
+                <select class="form-select" id="metodoPago">
+                  <option value="credito">Tarjeta de Crédito</option>
+                  <option value="debito">Tarjeta de Débito</option>
+                  <option value="paypal">PayPal</option>
+                </select>
+              </div>
+              
+              <div class="mb-4">
+                <label class="form-label">Preferencias de Comunicación</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="notificaciones">
+                  <label class="form-check-label" for="notificaciones">Recibir notificaciones por correo electrónico</label>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">Categorías Favoritas</label>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="categoriaTecnologia">
+                      <label class="form-check-label" for="categoriaTecnologia">Video Juegos</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="categoriaHogar">
+                      <label class="form-check-label" for="categoriaHogar">Artículos gamers</label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="categoriaDeportes">
+                      <label class="form-check-label" for="categoriaDeportes">Accesorios</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Guardar Preferencias</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+       
+
+   
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="bootstrap.js"></script>
+    <script src="assets/scripts/busqueda.js"></script>
+    <script src="assets/scripts/carrito.js"></script>
+    <script src="assets/scripts/perfil.js"></script>
+    <!--<script src="assets/scripts/productos.js"></script>-->
+    <script src="assets/scripts/recomendados.js"></script>
+    <script src="assets/scripts/validaciones.js"></script>
+    <!--<script src="assets/scripts/mapa.js"></script>-->
+    
+   
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      // Configuración del mapa
+      const map = L.map('map').setView([-33.45694, -70.64827], 13);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      L.marker([-33.45694, -70.64827])
+        .addTo(map)
+        .bindPopup('Torneo FIFA 2025<br>25 Septiembre')
+        .openPopup();
+    </script>
+
+    <!-- Botón de WhatsApp -->
+    <div class="whatsapp-floating">
+      <a href="https://wa.me/56937366485" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+        <span class="tooltip">Soporte Técnico</span>
+      </a>
+    </div>
+    <!-- Contenedor para notificaciones -->
+<div id="toastContainer" aria-live="polite" aria-atomic="true" style="position: absolute; top: 20px; right: 20px; z-index: 1050;"></div>
+
+  </body>
+</html>
